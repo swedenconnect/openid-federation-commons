@@ -61,6 +61,7 @@
       <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -114,7 +115,7 @@
                 <generateBuilders>true</generateBuilders>
                 <serializationLibrary>jackson</serializationLibrary>
 
-                <library>apache-httpclient</library> <!-- TODO -->
+                <library>apache-httpclient</library>
                 <sourceFolder>src/main/generated</sourceFolder>
                 <openApiNullable>false</openApiNullable>
               </configOptions>
