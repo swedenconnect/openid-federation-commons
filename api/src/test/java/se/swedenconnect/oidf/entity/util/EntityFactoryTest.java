@@ -17,9 +17,14 @@ package se.swedenconnect.oidf.entity.util;
 
 import org.junit.jupiter.api.Test;
 import se.swedenconnect.oidf.registry.api.model.EntityRecord;
+import se.swedenconnect.oidf.registry.api.model.EntityRecordHostedRecord;
+import se.swedenconnect.oidf.registry.api.model.EntityRecordHostedRecordTrustMarkSourcesInner;
+import se.swedenconnect.oidf.registry.api.model.EntityRecordJwks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The EntityFactoryTest class contains unit tests for the methods in the EntityFactory class.
@@ -38,11 +43,48 @@ public class EntityFactoryTest {
    */
   @Test
   public void testCreateDefaultEntity() {
-    final EntityRecord entity = EntityFactory.createDefaultEntity();
+    final EntityRecord entity = EntityTestFactory.createDefaultEntity();
 
     assertNotNull(entity);
 
-    assertEquals(EntityFactory.SUBJECT_DEFAULT, entity.getSubject());
+    assertEquals(EntityTestFactory.SUBJECT_DEFAULT, entity.getSubject());
+  }
+
+  @Test
+  void validateEntityRecordFields() throws Exception {
+
+    final EntityRecord entityRecord = EntityTestFactory.createDefaultEntity();
+
+    assertNotNull(entityRecord.getEntityRecordId(), "entityRecordId should not be null");
+    assertTrue(entityRecord.getEntityRecordId().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"), "entityRecordId should be a valid UUID");
+
+    assertNotNull(entityRecord.getIssuer(), "issuer should not be null");
+    assertFalse(entityRecord.getIssuer().isEmpty(), "issuer should not be empty");
+
+    assertNotNull(entityRecord.getSubject(), "subject should not be null");
+    assertFalse(entityRecord.getSubject().isEmpty(), "subject should not be empty");
+
+    assertNotNull(entityRecord.getPolicyRecordId(), "policyRecordId should not be null");
+    assertTrue(entityRecord.getPolicyRecordId().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"), "policyRecordId should be a valid UUID");
+
+    if (entityRecord.getHostedRecord() != null) {
+      EntityRecordHostedRecord hostedRecord = entityRecord.getHostedRecord();
+
+      assertNotNull(hostedRecord.getMetadata(), "metadata should not be null");
+
+      assertNotNull(hostedRecord.getAuthorityHints(), "authorityHints should not be null");
+      assertFalse(hostedRecord.getAuthorityHints().isEmpty(), "authorityHints should not be empty");
+
+      assertNotNull(hostedRecord.getTrustMarkSources(), "trustMarkSources should not be null");
+      for (EntityRecordHostedRecordTrustMarkSourcesInner trustMarkSource : hostedRecord.getTrustMarkSources()) {
+      }
+    }
+
+    if (entityRecord.getJwks() != null) {
+      EntityRecordJwks jwks = entityRecord.getJwks();
+      assertNotNull(jwks.getKeys(), "keys should not be null");
+      assertFalse(jwks.getKeys().isEmpty(), "keys should not be empty");
+    }
   }
 
   /**
@@ -54,9 +96,9 @@ public class EntityFactoryTest {
    */
   @Test
   public void testCreateDefaultEntityWithSubject() {
-    final String subject = EntityFactory.SUBJECT_2;
+    final String subject = EntityTestFactory.SUBJECT_2;
 
-    final EntityRecord entity = EntityFactory.createDefaultEntity(subject);
+    final EntityRecord entity = EntityTestFactory.createDefaultEntity(subject);
 
     assertNotNull(entity);
 

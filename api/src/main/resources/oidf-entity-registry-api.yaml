@@ -28,19 +28,20 @@ components:
       properties:
         trust_mark_subject_record_id:
           type: string
-          nullable: false
           description: The identity of this trust-mark-subject-record
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
         issuer:
           type: string
           nullable: false
           description: The identity of the entity issuing the record. This field is required.
+          pattern: ^https?:\/\/([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$
         trust_mark_id:
           type: string
           nullable: false
           description: Identity of the trust-mark-id.
+          pattern: ^https?:\/\/([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$
         subject:
           type: string
-          nullable: false
           description: The identity of the subject associated with the record. This field is required.
         revoked:
           type: boolean
@@ -48,12 +49,10 @@ components:
         granted:
           type: string
           format: date-time
-          nullable: true
-          description: The timestamp when subject is granted, can be in a future date.
+          description: The timestamp when subject is granted, can be a future date.
         expires:
           type: string
           format: date-time
-          nullable: true
           description: The timestamp when the subject will expire.
       required:
         - trust_mark_subject_record_id
@@ -70,6 +69,7 @@ components:
         policy_record_id:
           type: string
           description: Uniq identifyer for a policy
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
         policy:
           type: string
           description: The json object describing the Policy
@@ -84,17 +84,19 @@ components:
       properties:
         entity_record_id:
           type: string
-          description: Id of the record, used for delete and update
+          description: Id of the record, used for delete and update. Must be of the format UUID
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
         issuer:
           type: string
           description: The identity of the entity issuing the record. This field is required.
+          pattern: ^https?:\/\/([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$
         subject:
           type: string
           description: The identity of the subject associated with the record. This field is required.
         policy_record_id:
           type: string
-          nullable: false
           description: The id of the policy associated with the entity.
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
         override_configuration_location:
           type: string
           nullable: true
@@ -103,6 +105,10 @@ components:
           type: object
           description: Contains details about a hosted record service.
           properties:
+            metadata:
+              type: object
+              additionalProperties: true
+              description: Contains json blob with metadata.
             authority_hints:
               type: array
               description: A list of authority hints used in the record.
@@ -137,6 +143,7 @@ components:
         - entity_record_id
         - issuer
         - subject
+        - policy_record_id
 
 
 paths:

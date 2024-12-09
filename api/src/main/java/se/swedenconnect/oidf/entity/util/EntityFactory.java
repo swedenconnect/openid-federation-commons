@@ -25,8 +25,13 @@ import java.util.UUID;
 /**
  * Factory class for creating instances of {@link EntityRecord}, from a json set
  *
+ * @deprecated  This class should not be used any more. It is a test class,
+ * if it is needed move it into you own project.
+ *
+ *
  * @author David Goldring
  */
+@Deprecated
 public class EntityFactory {
 
 
@@ -58,45 +63,51 @@ public class EntityFactory {
 
     private static final String entityJsonData = """
         {
-            "issuer": "%s",
-            "subject": "%s",
-            "entity_record_id":"%s",
-            "policy_record_id": "3ea2aace-18b3-439e-88b1-61d232f20fe9",
-            "hosted_record": {
-              "authority_hints": [
-                "https://example.com/hint1",
-                "https://example.com/hint2"
-              ],
-              "trust_mark_sources": [
-                {
-                  "trust_mark_id": "https://trust.example.com/tm1",
-                  "issuer": "https://trust.example.com/issuer1"
-                },
-                {
-                  "trust_mark_id": "https://trust.example.com/tm2",
-                  "issuer": "https://trust.example.com/issuer2"
-                }
-              ]
-            },
-            "jwks": {
-              "keys": [
-                {
-                  "kty": "RSA",
-                  "kid": "key1",
-                  "use": "sig",
-                  "n": "v1hGQlmTWwoA8V3yHdF-...",
-                  "e": "AQAB"
-                },
-                {
-                  "kty": "RSA",
-                  "kid": "key2",
-                  "use": "enc",
-                  "n": "w2Hfg34VWQowQAx3HtP-...",
-                  "e": "AQAB"
-                }
-              ]
-            }
-        }
+           "entity_record_id": "123e4567-e89b-12d3-a456-426614174000",
+           "issuer": "%s",
+           "subject": "%s",
+           "policy_record_id": "%s",
+           "override_configuration_location": "https://config.example.com/metadata",
+           "hosted_record": {
+             "metadata": {
+               "key1": "value1",
+               "key2": "value2"
+             },
+             "authority_hints": [
+               "https://authority1.example.com",
+               "https://authority2.example.com"
+             ],
+             "trust_mark_sources": [
+               {
+                 "trust_mark_id": "tm12345",
+                 "issuer": "https://trustmark.example.com"
+               },
+               {
+                 "trust_mark_id": null,
+                 "issuer": null
+               }
+             ]
+           },
+           "jwks": {
+             "keys": [
+               {
+                 "kty": "RSA",
+                 "kid": "key1",
+                 "use": "sig",
+                 "n": "random_base64url_value",
+                 "e": "AQAB"
+               },
+               {
+                 "kty": "EC",
+                 "kid": "key2",
+                 "use": "enc",
+                 "crv": "P-256",
+                 "x": "random_base64url_value",
+                 "y": "random_base64url_value"
+               }
+             ]
+           }
+         }
         """;
 
 
