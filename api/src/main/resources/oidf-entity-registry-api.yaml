@@ -71,7 +71,8 @@ components:
           description: Uniq identifyer for a policy
           pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
         policy:
-          type: string
+          type: object
+          additionalProperties: true
           description: The json object describing the Policy
       required:
         - policy_record_id
