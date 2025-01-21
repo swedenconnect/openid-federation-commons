@@ -25,6 +25,8 @@ jobs:
           java-version: '21'
           cache: 'maven'
       - run: mvn versions:use-releases versions:set -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
+        env:
+          tag: ${{ github.ref_name }}
       - run: mvn --batch-mode deploy --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
