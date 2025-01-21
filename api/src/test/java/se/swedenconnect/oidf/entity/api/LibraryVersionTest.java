@@ -16,13 +16,13 @@ public class LibraryVersionTest {
 
   /**
    * Constructs a new LibraryVersionTest instance and loads the version information from the
-   * "version.properties" resource file.
+   * "versions" resource file.
    *
    * @throws Exception if there is an issue loading the properties file or reading the version property
    */
   public LibraryVersionTest() throws Exception {
     final Properties properties = new Properties();
-    properties.load(this.getClass().getClassLoader().getResourceAsStream("version.properties"));
+    properties.load(this.getClass().getClassLoader().getResourceAsStream("versions"));
 
     this.version = properties.getProperty("library.version");
     if (this.version.endsWith("-SNAPSHOT")) {
@@ -43,7 +43,7 @@ public class LibraryVersionTest {
    * Tests that the current version of the library matches the expected version.
    * <p>
    * The method asserts that the version string retrieved from {@link LibraryVersion#getVersion()}
-   * is equal to the version loaded from the "version.properties" resource file.
+   * is equal to the version loaded from the "versions" resource file.
    */
   @Test
   public void testVersion() {
