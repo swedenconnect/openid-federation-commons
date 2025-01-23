@@ -22,6 +22,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import java.util.List;
+
 /**
  * Quarkus rest client interface.
  *
@@ -50,4 +52,17 @@ public interface QuarkusInternalRestClient {
   @GET
   String resolve(@QueryParam("sub") final String subject, @QueryParam("trust_anchor") final String trustAnchor,
                  @QueryParam("entity_type") String entityType);
+
+  /**
+   * Discovery entities via resolver discovery endpoint.
+   * @param trustAnchor
+   * @param types
+   * @param trustMarkIds
+   * @return list of entities
+   */
+  @GET
+  List<String> discovery(
+      @QueryParam("trust_anchor") final String trustAnchor,
+      @QueryParam("type") final List<String> types,
+      @QueryParam("trust_mark_id") final List<String> trustMarkIds);
 }

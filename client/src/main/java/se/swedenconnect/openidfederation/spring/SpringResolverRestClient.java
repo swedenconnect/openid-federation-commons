@@ -20,9 +20,11 @@ package se.swedenconnect.openidfederation.spring;
 import com.nimbusds.oauth2.sdk.id.Identifier;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityID;
 import org.springframework.web.client.RestClient;
+import se.swedenconnect.openidfederation.DiscoveryRequest;
 import se.swedenconnect.openidfederation.ResolverRequest;
 import se.swedenconnect.openidfederation.ResolverRestClient;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,6 +56,21 @@ public class SpringResolverRestClient implements ResolverRestClient {
                       .map(Identifier::getValue)).build();
         }).retrieve()
         .toEntity(String.class)
+        .getBody();
+  }
+
+  @Override
+  public List<String> discovery(final DiscoveryRequest request) {
+    return this.client.get()
+        .uri(builder -> {
+          return builder.path("/discovery")
+              .queryParam("trust_anchor", request.trustAnchor())
+              .queryParam("type", request.types())
+              .queryParam("trust_mark_id", request.trustMarkIds())
+              .build();
+        })
+        .retrieve()
+        .toEntity(List.class)
         .getBody();
   }
 }
