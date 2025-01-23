@@ -14,26 +14,15 @@
  * limitations under the License.
  *
  */
-
 package se.swedenconnect.openidfederation;
 
 import java.util.List;
 
 /**
- * Interface for protocol communication towards a resolver.
+ * Response from resolver discovery endpoint.
+ * @param entities
  *
- * @author Felix
+ * @author Felix Hellman
  */
-public interface ResolverRestClient {
-  /**
-   * @param request to resolve
-   * @return a signed jwt
-   */
-  String resolve(final ResolverRequest request);
-
-  /**
-   * @param request for discovery
-   * @return list of entities matching request criteria
-   */
-  List<String> discovery(final DiscoveryRequest request);
+public record DiscoveryResponse(List<ResolverResponse> entities) {
 }

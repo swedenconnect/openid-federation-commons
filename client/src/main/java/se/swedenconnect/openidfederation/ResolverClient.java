@@ -84,6 +84,20 @@ public class ResolverClient {
     }
   }
 
+  /**
+   * Discovery through resolver.
+   * @param request criteria for search
+   * @return list of entities
+   */
+  public DiscoveryResponse discovery(final DiscoveryRequest request) {
+    final List<String> entities = this.restClient.discovery(request);
+    final List<ResolverResponse> resolvedEntities = entities.stream()
+        .map(sub -> this.resolve(new ResolverRequest(new EntityID(request.trustAnchor()),
+            new EntityID(sub), null)))
+        .toList();
+    return new DiscoveryResponse(resolvedEntities);
+  }
+
   private Key selectKey(final SignedJWT jwt) throws JOSEException {
     final JWKSelector selector = new JWKSelector(new JWKMatcher.Builder()
         .keyID(jwt.getHeader().getKeyID())

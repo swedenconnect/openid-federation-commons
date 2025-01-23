@@ -36,9 +36,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 public class ResolverClientTest {
   static {
-    final WireMockServer wireMockServer = new WireMockServer(9090);
+    final WireMockServer wireMockServer = new WireMockServer(11000);
     wireMockServer.start();
-    WireMock.configureFor(9090);
+    WireMock.configureFor(11000);
   }
 
   @Test
@@ -48,7 +48,7 @@ public class ResolverClientTest {
         .withQueryParam("sub", WireMock.matching(".*"))
         .withQueryParam("trust_anchor", WireMock.matching(".*"))
         .willReturn(new ResponseDefinitionBuilder().withResponseBody(new Body(new ResolverResponseFactory().generateResolverResponse(signKey)))));
-    final ResolverClient resolver = new ResolverRestClientFactory().create(RestClient.builder().build(), new EntityID("http://localhost:9090"),
+    final ResolverClient resolver = new ResolverRestClientFactory().create(RestClient.builder().build(), new EntityID("http://localhost:11000"),
         new JWKSet(signKey.toPublicJWK()));
 
     final ResolverResponse response = resolver.resolve(new ResolverRequest(new EntityID("http://trustanchor.test"),

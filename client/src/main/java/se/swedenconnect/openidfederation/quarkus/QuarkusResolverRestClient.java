@@ -17,9 +17,11 @@
 
 package se.swedenconnect.openidfederation.quarkus;
 
+import se.swedenconnect.openidfederation.DiscoveryRequest;
 import se.swedenconnect.openidfederation.ResolverRequest;
 import se.swedenconnect.openidfederation.ResolverRestClient;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,6 +46,16 @@ public class QuarkusResolverRestClient implements ResolverRestClient {
         .map(t -> this.client.resolve(request.subject().getValue(), request.trustAnchor().getValue(), t.getValue()))
         .orElseGet(
             () -> this.client.resolve(request.subject().getValue(), request.trustAnchor().getValue())
+        );
+  }
+
+  @Override
+  public List<String> discovery(final DiscoveryRequest request) {
+    return this.client
+        .discovery(
+            request.trustAnchor(),
+            request.types(),
+            request.trustMarkIds()
         );
   }
 }
