@@ -1,11 +1,11 @@
-name: Automated publication of docker image
+name: Automated release of maven artifacts
 on:
   push:
     tags:
       - 'v*'
 jobs:
   release:
-    uses: swedenconnect/openid-federation-commons/blob/main/.github/workflows/resuable-mvn-publish.yml@main
+    uses: swedenconnect/openid-federation-commons/.github/workflows/reusable-mvn-release.yml@main
     secrets: inherit
     with:
-      revision-property: revision
+      auto-update-revision: true

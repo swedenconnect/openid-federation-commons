@@ -1,27 +1,22 @@
 on:
   workflow_call:
     inputs:
-      revision-propety:
-        type: string
-        required: true
+      auto-update-revision:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   mvn-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - run: mvn versions:use-releases versions:set -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
+      - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=revision -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
         env:
           tag: ${{ github.ref_name }}
       - run: mvn --batch-mode deploy --no-transfer-progress
@@ -49,19 +44,24 @@ jobs:
     name: Update reversion version
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         name: Read tag and set snapshot version to next patch version
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - run: |
-          next_snapshot_version=`echo $tag | awk -F'[v.]' '{printf "%s.%s.%s-SNAPSHOT",$1,$2,$3+1}'`
-          mvn versions:set-property -Dproperty=${{inputs.revision-property}} -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
         env:
           tag: ${{ github.ref_name }}
       - uses: actions/checkout@v4
-      - run: |
+        with:
+          fetch-depth: 0
+          ref: main
+      - if: ${{ inputs.auto-update-revision == true }}
+        name: Commits changes and pushes
+        run: |
+          next_snapshot_version=`echo $tag | awk -F'[v.]' '{printf "%s.%s.%s-SNAPSHOT",$2,$3,$4+1}'`
+          mvn versions:set-property -Dproperty=revision -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
           # Github Actions user
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

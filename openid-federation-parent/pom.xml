@@ -4,13 +4,13 @@
 
     <artifactId>openid-federation-parent</artifactId>
     <packaging>pom</packaging>
-    <groupId>se.swedenconnect.openid-federation</groupId>
-    <version>${openid-federation.parent.revision}</version>
+    <groupId>se.swedenconnect.oidf</groupId>
+    <version>${revision}</version>
 
     <name>OpenID Federation :: Parent</name>
 
     <properties>
-        <openid-federation.parent.revision>0.3.1-SNAPSHOT</openid-federation.parent.revision>
+        <revision>..1-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -20,17 +20,25 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>se.swedenconnect.openid-federation</groupId>
+                <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>client</artifactId>
-                <version>${openid-federation.parent.revision}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>se.swedenconnect.openid-federation</groupId>
+                <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>openid-federation-entity-registry-api</artifactId>
-                <version>${openid-federation.parent.revision}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Sweden Connect Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/swedenconnect/openid-federation-commons</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
