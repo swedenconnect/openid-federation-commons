@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>se.swedenconnect.openid-federation</groupId>
+    <groupId>se.swedenconnect.oidf</groupId>
     <artifactId>openid-federation-module-parent</artifactId>
     <version>${revision}</version>
   </parent>

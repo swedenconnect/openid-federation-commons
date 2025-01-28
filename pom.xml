@@ -20,12 +20,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>openid-federation-module-parent</artifactId>
-    <groupId>se.swedenconnect.openid-federation</groupId>
+    <groupId>se.swedenconnect.oidf</groupId>
     <version>${revision}</version>
     <name>OpenID Federation :: Modules</name>
 
     <properties>
-        <revision>0.3.1-SNAPSHOT</revision>
+        <revision>1.2.4-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>

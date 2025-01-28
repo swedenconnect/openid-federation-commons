@@ -4,7 +4,7 @@
 
     <artifactId>openid-federation-parent</artifactId>
     <packaging>pom</packaging>
-    <groupId>se.swedenconnect.openid-federation</groupId>
+    <groupId>se.swedenconnect.oidf</groupId>
     <version>${openid-federation.parent.revision}</version>
 
     <name>OpenID Federation :: Parent</name>
@@ -20,12 +20,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>se.swedenconnect.openid-federation</groupId>
+                <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>client</artifactId>
                 <version>${openid-federation.parent.revision}</version>
             </dependency>
             <dependency>
-                <groupId>se.swedenconnect.openid-federation</groupId>
+                <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>openid-federation-entity-registry-api</artifactId>
                 <version>${openid-federation.parent.revision}</version>
             </dependency>
