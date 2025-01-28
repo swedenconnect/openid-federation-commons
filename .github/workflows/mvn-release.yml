@@ -8,4 +8,4 @@ jobs:
     uses: swedenconnect/openid-federation-commons/blob/main/.github/workflows/resuable-mvn-publish.yml@main
     secrets: inherit
     with:
-      revision-property: revision
+      auto-update-revision: true

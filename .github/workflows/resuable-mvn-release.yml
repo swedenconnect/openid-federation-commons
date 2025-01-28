@@ -1,9 +1,9 @@
 on:
   workflow_call:
     inputs:
-      revision-propety:
-        type: string
-        required: true
+      auto-update-revision:
+        type: boolean
+        required: false
 
 jobs:
   mvn-release:
@@ -55,13 +55,17 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - run: |
+      - if: ${{ inputs.auto-update-revision == 'true' }}
+        name: Update pom.xml with next snapshot version
+        run: |
           next_snapshot_version=`echo $tag | awk -F'[v.]' '{printf "%s.%s.%s-SNAPSHOT",$1,$2,$3+1}'`
-          mvn versions:set-property -Dproperty=${{inputs.revision-property}} -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
+          mvn versions:set-property -Dproperty=revision -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
         env:
           tag: ${{ github.ref_name }}
       - uses: actions/checkout@v4
-      - run: |
+      - if: ${{ inputs.auto-update-revision == 'true' }}
+        name: Commits changes and pushes
+        run: |
           # Github Actions user
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
