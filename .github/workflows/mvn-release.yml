@@ -5,7 +5,7 @@ on:
       - 'v*'
 jobs:
   release:
-    uses: swedenconnect/openid-federation-commons/blob/main/.github/workflows/resuable-mvn-publish.yml@main
+    uses: swedenconnect/openid-federation-commons/.github/workflows/resuable-mvn-publish.yml@main
     secrets: inherit
     with:
       auto-update-revision: true
