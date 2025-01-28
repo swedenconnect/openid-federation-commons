@@ -5,12 +5,12 @@
     <artifactId>openid-federation-parent</artifactId>
     <packaging>pom</packaging>
     <groupId>se.swedenconnect.oidf</groupId>
-    <version>${openid-federation.parent.revision}</version>
+    <version>${revision}</version>
 
     <name>OpenID Federation :: Parent</name>
 
     <properties>
-        <openid-federation.parent.revision>0.3.1-SNAPSHOT</openid-federation.parent.revision>
+        <revision>0.3.1-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -22,12 +22,12 @@
             <dependency>
                 <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>client</artifactId>
-                <version>${openid-federation.parent.revision}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>openid-federation-entity-registry-api</artifactId>
-                <version>${openid-federation.parent.revision}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
