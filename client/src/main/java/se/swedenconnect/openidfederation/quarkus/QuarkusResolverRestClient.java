@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Sweden Connect
+ * Copyright 2024-2025 Sweden Connect
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package se.swedenconnect.openidfederation.quarkus;
 
 import se.swedenconnect.openidfederation.DiscoveryRequest;
@@ -34,6 +33,7 @@ public class QuarkusResolverRestClient implements ResolverRestClient {
 
   /**
    * Constructor.
+   *
    * @param client to use
    */
   public QuarkusResolverRestClient(final QuarkusInternalRestClient client) {

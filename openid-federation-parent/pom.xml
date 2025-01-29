@@ -1,3 +1,20 @@
+<!--
+  ~ Copyright 2024-2025 Sweden Connect
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -15,6 +32,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.4.2</spring.boot.version>
+        <credentials.support.version>2.0.2</credentials.support.version>
     </properties>
 
     <dependencyManagement>
@@ -28,6 +47,48 @@
                 <groupId>se.swedenconnect.oidf</groupId>
                 <artifactId>openid-federation-entity-registry-api</artifactId>
                 <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <type>pom</type>
+                <version>${spring.boot.version}</version>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.34</version>
+            </dependency>
+            <dependency>
+                <groupId>se.swedenconnect.security</groupId>
+                <artifactId>credentials-support</artifactId>
+                <version>${credentials.support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>se.swedenconnect.security</groupId>
+                <artifactId>credentials-support-nimbus</artifactId>
+                <version>${credentials.support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>se.swedenconnect.security</groupId>
+                <artifactId>credentials-support-spring-boot-starter</artifactId>
+                <version>${credentials.support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>9.40</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>oauth2-oidc-sdk</artifactId>
+                <version>11.20.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>1.79</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -134,8 +195,8 @@
                     </sourceDirectories>
                     <checkstyleRules>
                         <module name="Checker">
-                            <module name="Header">
-                                <property name="header" value="/*\n * Copyright 2025 Sweden Connect"/>
+                            <module name="RegexpHeader">
+                                <property name="header" value="/*\n * Copyright (2024-)?2025 Sweden Connect"/>
                             </module>
                             <module name="LineLength">
                                 <property name="max" value="120"/>
@@ -194,6 +255,34 @@
                         </configuration>
                         <goals>
                             <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <!-- We do not want to force this plugin upon children -->
+                <inherited>false</inherited>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -321,6 +410,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
             </plugin>
         </plugins>
     </build>

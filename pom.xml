@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2024 Sweden Connect
+  ~ Copyright 2024-2025 Sweden Connect
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -118,8 +118,8 @@
                     </sourceDirectories>
                     <checkstyleRules>
                         <module name="Checker">
-                            <module name="Header">
-                                <property name="header" value="/*\n * Copyright 2024 Sweden Connect"/>
+                            <module name="RegexpHeader">
+                                <property name="header" value="/*\n * Copyright (2024-)?2025 Sweden Connect"/>
                             </module>
                             <module name="LineLength">
                                 <property name="max" value="120"/>
@@ -179,6 +179,32 @@
                         </configuration>
                         <goals>
                             <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
                         </goals>
                     </execution>
                 </executions>
