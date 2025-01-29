@@ -28,7 +28,63 @@
     <packaging>jar</packaging>
 
     <name>OpenID Federation :: Client</name>
-    <url>http://maven.apache.org</url>
+    <description>Client library for OpenID Federation</description>
+    <url>https://github.com/swedenconnect/openid-federation-commons</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:https://github.com/swedenconnect/openid-federation-commons.git</connection>
+        <developerConnection>scm:https://github.com/swedenconnect/openid-federation-commons.git</developerConnection>
+        <url>https://github.com/swedenconnect/openid-federation-commons/tree/main</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>felix</id>
+            <name>Felix Hellman</name>
+            <email>felix@idsec.se</email>
+            <url>https://www.idsec.se</url>
+            <organization>Sweden Connect</organization>
+            <organizationUrl>https://www.swedenconnect.se</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>plarsa</id>
+            <name>Per Fredrik Plars</name>
+            <email>pf@idsec.se</email>
+            <url>https://www.idsec.se</url>
+            <organization>Sweden Connect</organization>
+            <organizationUrl>https://www.swedenconnect.se</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>davgol</id>
+            <name>David Goldring</name>
+            <email>david.goldring@idsec.se</email>
+            <url>https://www.idsec.se</url>
+            <organization>Sweden Connect</organization>
+            <organizationUrl>https://www.swedenconnect.se</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Sweden Connect</name>
+        <url>https://swedenconnect.se</url>
+    </organization>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
