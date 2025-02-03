@@ -1,0 +1,38 @@
+credential:
+  bundles:
+    keystore:
+      sign-key-store:
+        location: file:/container/signkey.p12
+        password: changeit
+        type: JKS
+    jks:
+      sign-key-1:
+        store-reference: sign-key-store
+        name: "Sign key 1"
+        key:
+          alias: 1
+          key-password: changeit
+
+openid:
+  federation:
+    registry:
+      integration:
+        instance-id: 4860ae57-9716-492b-951c-2a8c334f790a
+        endpoints:
+          base-path: https://registry.local.swedenconncet.se
+        skip-init:
+          - ALL
+        validation-keys:
+          - sign-key-1
+    sign:
+      - sign-key-1
+
+spring:
+  ssl:
+    bundle:
+      jks:
+        oidf-internal:
+          truststore:
+            location: file:container/truststore.p12
+            password: changeit
+            type: PKCS12

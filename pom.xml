@@ -97,6 +97,7 @@
         <module>openid-federation-parent</module>
         <module>api</module>
         <module>client</module>
+        <module>test-containers</module>
     </modules>
 
     <dependencyManagement>
