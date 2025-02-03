@@ -22,6 +22,69 @@ components:
       bearerFormat: JWT
 
   schemas:
+    options-record:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            save:
+              type: string
+              description: "Path to save data"
+            update:
+              type: string
+              description: "Path to update data"
+            delete:
+              type: string
+              description: "Path to delete data"
+
+        option:
+          type: array
+          items:
+            title: Values
+            type: object
+            properties:
+              key:
+                type: string
+                description: "The unique key used in the configuration"
+              value:
+                type: string
+                description: "The value associated with the key"
+              value_type:
+                type: string
+                description: "The type of the value (e.g., string, integer, boolean)"
+              validation:
+                type: string
+                description: "Validation rule or pattern applied to the value"
+              setting_description:
+                type: string
+                description: "A human-readable description of the configuration setting"
+              options:
+                type: array
+                description: "A list of allowed options for this configuration setting"
+                items:
+                  title: "OptionRecord"
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: "The key for this option"
+                    value:
+                      type: string
+                      description: "The value associated with this option"
+                    selected:
+                      type: boolean
+                      description: "Indicates if this option is selected by default"
+                  required:
+                    - key
+                    - value
+                    - selected
+                required:
+                  - key
+                  - value
+                  - value_type
+                  - description
+
     trust-mark-subject-record:
       type: object
       description: A representation of an  trust-mark-subject-record.
