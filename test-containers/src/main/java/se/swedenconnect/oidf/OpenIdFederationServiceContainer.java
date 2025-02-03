@@ -16,12 +16,12 @@
  */
 package se.swedenconnect.oidf;
 
+import lombok.Getter;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,9 +42,19 @@ public class OpenIdFederationServiceContainer extends GenericContainer<OpenIdFed
       }
       """;
 
+  public static final String TRUST_MARK_ISSUER_DEFAULT_METADATA = """
+      {
+        "federation_entity": {
+          "organization_name": "Authorization"
+        }
+      }
+      """;
+
+  @Getter
   private Integer port = 8080;
   private final AtomicInteger entityIndex = new AtomicInteger(0);
   private final AtomicInteger trustAnchorIndex = new AtomicInteger(0);
+  private final AtomicInteger trustMarkIssuerIndex = new AtomicInteger(0);
 
   /**
    * Default constructor.
@@ -63,74 +73,6 @@ public class OpenIdFederationServiceContainer extends GenericContainer<OpenIdFed
     this.withEnv("SERVER_PORT", "%d".formatted(this.port));
   }
 
-  /**
-   * Configures a trust anchor for this instance.
-   * @param entityId for trust anchor
-   * @param alias for trust anchor
-   * @param trustAnchorMetadata for trust anchor
-   * @return this
-   */
-  public OpenIdFederationServiceContainer withTrustAnchor(
-      final String entityId,
-      final String alias,
-      final String trustAnchorMetadata) {
-    this.withEnv("OPENID_FEDERATION_MODULES_TRUSTANCHORS[%d]_ENTITYIDENTIFIER"
-        .formatted(this.trustAnchorIndex.get()), entityId);
-    this.withEnv("OPENID_FEDERATION_MODULES_TRUSTANCHORS[%d]_ALIAS"
-        .formatted(this.trustAnchorIndex.getAndIncrement()), alias);
-    return this.withEntity(entityId, trustAnchorMetadata);
-  }
-
-
-  /**
-   * Adds entity statement to this instance
-   * @param entity to add
-   * @param issuer of the entity
-   * @return this
-   */
-  public OpenIdFederationServiceContainer withEntityStatement(final String entity, final String issuer) {
-    return this.withEntityStatement(entity, issuer, List.of("sign-key-1"), null);
-  }
-
-  /**
-   * Adds entity statement to this instance
-   * @param entity to add
-   * @param issuer of the entity
-   * @param publicKeys of the entity
-   * @param jsonMetadata for hosted records
-   * @return this
-   */
-  public OpenIdFederationServiceContainer withEntityStatement(final String entity, final String issuer,
-                                                              final List<String> publicKeys,
-                                                              final String jsonMetadata) {
-    this.withEnv("OPENID_FEDERATION_ENTITIES[%d]_SUBJECT".formatted(this.entityIndex.get()), entity);
-    this.withEnv("OPENID_FEDERATION_ENTITIES[%d]_ISSUER".formatted(this.entityIndex.get()), issuer);
-    if (Objects.nonNull(publicKeys)) {
-      for (int x = 0; x < publicKeys.size(); x++) {
-        this.withEnv("OPENID_FEDERATION_ENTITIES[%d]_PUBLICKEYS[%d]".formatted(this.entityIndex.get(), x),
-            publicKeys.get(x));
-      }
-    }
-    if (Objects.nonNull(jsonMetadata)) {
-      this.withEnv("OPENID_FEDERATION_ENTITIES[%d]_HOSTEDRECORD_METADATA_JSON"
-          .formatted(this.entityIndex.get()), jsonMetadata);
-    }
-    this.entityIndex.incrementAndGet();
-    return self();
-  }
-
-
-  private OpenIdFederationServiceContainer withEntity(final String entityId, final String jsonMetadata) {
-    return this.withEntityStatement(entityId, entityId, null, jsonMetadata);
-  }
-
-  /**
-   * @return port of this container
-   */
-  public Integer getPort() {
-    return this.port;
-  }
-
   @Override
   public OpenIdFederationServiceContainer withAccessToHost(final boolean flag) {
     super.withAccessToHost(flag);
@@ -139,5 +81,39 @@ public class OpenIdFederationServiceContainer extends GenericContainer<OpenIdFed
       this.setPortBindings(List.of("%d:%d".formatted(this.getPort(), this.getPort())));
     }
     return self();
+  }
+
+  /**
+   * @param properties to apply
+   * @return this
+   */
+  public OpenIdFederationServiceContainer customize(final EntityProperties properties) {
+    properties.customize(this, this.entityIndex.getAndIncrement());
+    return self();
+  }
+
+  /**
+   * @param properties to apply
+   * @return this
+   */
+  public OpenIdFederationServiceContainer customize(final TrustAnchorConfiguration properties) {
+    properties.customize(this, this.trustAnchorIndex.getAndIncrement());
+    return self();
+  }
+
+  /**
+   * @param properties to apply
+   * @return this
+   */
+  public OpenIdFederationServiceContainer customize(final TrustMarkIssuerConfiguration properties) {
+    properties.customize(this, this.trustMarkIssuerIndex.getAndIncrement());
+    return self();
+  }
+
+  /**
+   * @return list of active key names
+   */
+  public List<String> getKeyNames() {
+    return List.of("sign-key-1");
   }
 }
