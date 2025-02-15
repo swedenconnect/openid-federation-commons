@@ -53,30 +53,6 @@ public class TrustMarkIssuerConfiguration implements PropertyCustomizer {
     for (int x = 0; x < this.trustMarkProperties.size(); x++) {
       final TrustMarkProperties properties = this.trustMarkProperties.get(x);
       container.withEnv(PropertyPath.trustMarkIssuer(index).trustMark(x).trustMarkId(), properties.trustMarkId);
-      for (int y = 0; y < properties.subjects.size(); y++) {
-        final TrustMarkSubjectProperties subjectProperties = properties.subjects.get(y);
-        final int outerIndex = x;
-        final int innerIndex = y;
-        container.withEnv(PropertyPath.trustMarkIssuer(index).trustMark(x).trustMarkSubject(y).sub(),
-            subjectProperties.sub);
-        Optional.ofNullable(subjectProperties.expires).map(expires -> expires.format(DateTimeFormatter.ISO_INSTANT))
-            .ifPresent(expires -> {
-              container.withEnv(PropertyPath.trustMarkIssuer(index)
-                  .trustMark(outerIndex).trustMarkSubject(innerIndex).expires(), expires);
-            });
-
-        Optional.ofNullable(subjectProperties.granted).map(granted -> granted.format(DateTimeFormatter.ISO_INSTANT))
-            .ifPresent(granted -> {
-              container.withEnv(PropertyPath.trustMarkIssuer(index)
-                  .trustMark(outerIndex).trustMarkSubject(innerIndex).granted(), granted);
-            });
-
-        Optional.ofNullable(subjectProperties.revoked).ifPresent(revoked -> {
-          container.withEnv(PropertyPath.trustMarkIssuer(index).trustMark(outerIndex)
-              .trustMarkSubject(innerIndex).revoked(),
-              Boolean.toString(revoked));
-        });
-      }
     }
   }
 
@@ -89,20 +65,5 @@ public class TrustMarkIssuerConfiguration implements PropertyCustomizer {
   @Builder
   public static class TrustMarkProperties {
     private final String trustMarkId;
-    List<TrustMarkSubjectProperties> subjects;
-  }
-
-  /**
-   * Properties for trust mark subject.
-   *
-   * @author Felix Hellman
-   */
-  @AllArgsConstructor
-  @Builder
-  public static class TrustMarkSubjectProperties {
-    private final String sub;
-    private final LocalDateTime granted;
-    private final LocalDateTime expires;
-    private final Boolean revoked;
   }
 }

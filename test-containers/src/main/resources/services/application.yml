@@ -1,31 +1,33 @@
 credential:
   bundles:
     keystore:
-      sign-key-store:
+      K0:
+        location: file:/container/signkey.p12
+        password: changeit
+        type: JKS
+      K1:
         location: file:/container/signkey.p12
         password: changeit
         type: JKS
     jks:
-      sign-key-1:
-        store-reference: sign-key-store
-        name: "Sign key 1"
-        key:
-          alias: 1
-          key-password: changeit
+      VK:
+        store-reference: K0
+        name: "VK"
+      SK:
+        store-reference: K0
+        name: "SK"
+
 
 openid:
   federation:
+    storage: memory
     registry:
       integration:
-        instance-id: 4860ae57-9716-492b-951c-2a8c334f790a
-        endpoints:
-          base-path: https://registry.local.swedenconncet.se
-        skip-init:
-          - ALL
+        enabled: false
         validation-keys:
-          - sign-key-1
+          - VK
     sign:
-      - sign-key-1
+      - SK
 
 spring:
   ssl:

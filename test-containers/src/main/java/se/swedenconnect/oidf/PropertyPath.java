@@ -27,6 +27,8 @@ public class PropertyPath {
   private static final String ENTITIES = "OPENID_FEDERATION_ENTITIES[%d]";
   private static final String TRUST_ANCHOR = "OPENID_FEDERATION_MODULES_TRUSTANCHORS[%d]";
   private static final String TRUST_MARK_ISSUER = "OPENID_FEDERATION_MODULES_TRUSTMARKISSUERS[%d]";
+  private static final String INTEGRATION = "OPENID_FEDERATION_REGISTRY_INTEGRATION";
+  private static final String TRUST_MARK_SUBEJCTS = "OPENID_FEDERATION_TRUSTMARKSUBJECTS[%d]";
 
   private final StringBuilder path = new StringBuilder();
 
@@ -61,6 +63,27 @@ public class PropertyPath {
     final PropertyPath propertyPath = new PropertyPath();
     propertyPath.append(TRUST_MARK_ISSUER.formatted(index));
     return new TrustMarkIssuerPath(propertyPath);
+  }
+
+  /**
+   * Create path for integration.
+   * @return integration path builder
+   */
+  public static IntegrationPath integration() {
+    final PropertyPath propertyPath = new PropertyPath();
+    propertyPath.append(INTEGRATION);
+    return new IntegrationPath(propertyPath);
+  }
+
+  /**
+   * Create path for trust mark subject.
+   * @param index of the subject
+   * @return path builder for trust mark subject
+   */
+  public static TrustMarkSubjectPath trustMarkSubjectPath(final int index) {
+    final PropertyPath propertyPath = new PropertyPath();
+    propertyPath.append(TRUST_MARK_SUBEJCTS.formatted(index));
+    return new TrustMarkSubjectPath(propertyPath);
   }
 
   protected void append(final String content) {
@@ -102,6 +125,29 @@ public class PropertyPath {
     }
   }
 
+  /**
+   * Integration path builder class.
+   *
+   * @author Felix Hellman
+   */
+  @AllArgsConstructor
+  public static class IntegrationPath {
+    private final PropertyPath path;
+
+    /**
+     * @return path for instance id
+     */
+    public String instanceId() {
+      return this.path.finalize("_INSTANCEID");
+    }
+
+    /**
+     * @return path for endpoint base path
+     */
+    public String endpointsBasePath() {
+      return this.path.finalize("_ENDPOINTS_BASEPATH");
+    }
+  }
   /**
    * Trust Mark Issuer path builder class.
    *
@@ -159,53 +205,58 @@ public class PropertyPath {
       public String trustMarkId() {
         return this.path.finalize("_TRUSTMARKID");
       }
+    }
+  }
 
-      /**
-       * @param index of the trust mark subject
-       * @return path builder for trust mark subject
-       */
-      public TrustMarkSubjectPath trustMarkSubject(final int index) {
-        this.path.append("_SUBJECTS[%d]".formatted(index));
-        return new TrustMarkSubjectPath(this.path);
-      }
+  /**
+   * Trust mark subject path builder class.
+   *
+   * @author Felix Hellman
+   */
+  @AllArgsConstructor
+  public static class TrustMarkSubjectPath {
+    private final PropertyPath path;
+
+    /**
+     * @return sub path
+     */
+    public String sub() {
+      return this.path.finalize("_SUB");
     }
 
     /**
-     * Trust mark subject path builder class.
-     *
-     * @author Felix Hellman
+     * @return granted path
      */
-    @AllArgsConstructor
-    public static class TrustMarkSubjectPath {
-      private final PropertyPath path;
+    public String granted() {
+      return this.path.finalize("_GRANTED");
+    }
 
-      /**
-       * @return sub path
-       */
-      public String sub() {
-        return this.path.finalize("_SUB");
-      }
+    /**
+     * @return issuer path
+     */
+    public String iss() {
+      return this.path.finalize("_ISS");
+    }
 
-      /**
-       * @return generated path
-       */
-      public String granted() {
-        return this.path.finalize("_GRANTED");
-      }
+    /**
+     * @return trust mark issuer path
+     */
+    public String tmi() {
+      return this.path.finalize("_TMI");
+    }
 
-      /**
-       * @return expires path
-       */
-      public String expires() {
-        return this.path.finalize("_EXPIRES");
-      }
+    /**
+     * @return expires path
+     */
+    public String expires() {
+      return this.path.finalize("_EXPIRES");
+    }
 
-      /**
-       * @return revoked path
-       */
-      public String revoked() {
-        return this.path.finalize("_REVOKED");
-      }
+    /**
+     * @return revoked path
+     */
+    public String revoked() {
+      return this.path.finalize("_REVOKED");
     }
   }
 

@@ -22,10 +22,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import se.swedenconnect.oidf.EntityProperties;
+import se.swedenconnect.oidf.FederationSignJWKProperty;
+import se.swedenconnect.oidf.JWKProperties;
 import se.swedenconnect.oidf.OpenIdFederationServiceContainer;
+import se.swedenconnect.oidf.RegistryValidationJWKProperty;
 import se.swedenconnect.oidf.TrustAnchorConfiguration;
 import se.swedenconnect.oidf.TrustMarkIssuerConfiguration;
 import se.swedenconnect.oidf.TrustMarkSourceProperties;
+import se.swedenconnect.oidf.TrustMarkSubjectProperties;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -43,22 +47,29 @@ public class OpenIdFederationServiceContainerTest {
         "https://second.test",
         "https://third.test"
     );
+
     final String trustAnchorEntityId = "https://myentity.test/ta";
-    final List<TrustMarkIssuerConfiguration.TrustMarkSubjectProperties> trustMarkSubjects = List.of(
-        TrustMarkIssuerConfiguration.TrustMarkSubjectProperties.builder()
+    final String trustMarkId = "https://trustmark.test/tmi/certificed";
+    final String trustMarkIssuer = "https://trustmark.test/tmi";
+
+    final List<TrustMarkSubjectProperties> trustMarkSubjects = List.of(
+        TrustMarkSubjectProperties.builder()
             .sub("https://myentity.test/ta")
+            .tmi(trustMarkId)
+            .iss(trustMarkIssuer)
             .build()
     );
-    final String trustMarkId = "https://trustmark.test/tmi/certificed";
+
     final OpenIdFederationServiceContainer container = new OpenIdFederationServiceContainer()
+        .customize(trustMarkSubjects)
         .customize(TrustAnchorConfiguration.builder()
             .alias("ta")
             .properties(EntityProperties.builder()
                 .issuer(trustAnchorEntityId)
                 .subject(trustAnchorEntityId)
                 .trustMarkSourceProperties(List.of(TrustMarkSourceProperties.builder()
-                        .issuer("https://trustmark.test/tmi")
-                        .trustMarkId(trustMarkId)
+                    .issuer(trustMarkIssuer)
+                    .trustMarkId(trustMarkId)
                     .build()))
                 .jsonMetadata(OpenIdFederationServiceContainer.TRUST_ANCHOR_DEFAULT_METADATA)
                 .build())
@@ -67,19 +78,32 @@ public class OpenIdFederationServiceContainerTest {
         .customize(TrustMarkIssuerConfiguration.builder()
             .alias("tmi")
             .properties(EntityProperties.builder()
-                .issuer("https://trustmark.test/tmi")
-                .subject("https://trustmark.test/tmi")
+                .issuer(trustMarkIssuer)
+                .subject(trustMarkIssuer)
                 .jsonMetadata(OpenIdFederationServiceContainer.TRUST_MARK_ISSUER_DEFAULT_METADATA)
                 .build())
 
             .trustMarkValidityDuration(Duration.of(15, ChronoUnit.MINUTES))
             .trustMarkProperties(List.of(TrustMarkIssuerConfiguration.TrustMarkProperties.builder()
-                    .trustMarkId(trustMarkId)
-                    .subjects(trustMarkSubjects)
+                .trustMarkId(trustMarkId)
                 .build()))
             .build())
         .withLogConsumer(new Slf4jLogConsumer(log))
         .withAccessToHost(true);
+
+    container.customize(JWKProperties.builder()
+        .validationJWK(RegistryValidationJWKProperty.builder()
+            .keyAlias("1")
+            .keyPassword("changeit")
+            .classPathLocation("services/signkey-2.p12")
+            .build())
+        .signJWK(FederationSignJWKProperty
+            .builder()
+            .keyAlias("1")
+            .keyPassword("changeit")
+            .classPathLocation("signkey-3.p12")
+            .build())
+        .build());
 
     container.start();
 
