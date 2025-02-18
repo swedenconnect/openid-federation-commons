@@ -51,7 +51,7 @@ public class SpringResolverRestClient implements ResolverRestClient {
           return builder.path("/resolve")
               .queryParam("trust_anchor", request.trustAnchor().getValue())
               .queryParam("sub", request.subject().getValue())
-              .queryParamIfPresent("typ",
+              .queryParamIfPresent("entity_type",
                   Optional.ofNullable(request.type())
                       .map(Identifier::getValue)).build();
         }).retrieve()
@@ -65,7 +65,7 @@ public class SpringResolverRestClient implements ResolverRestClient {
         .uri(builder -> {
           return builder.path("/discovery")
               .queryParam("trust_anchor", request.trustAnchor())
-              .queryParam("type", request.types())
+              .queryParam("entity_type", request.types())
               .queryParam("trust_mark_id", request.trustMarkIds())
               .build();
         })

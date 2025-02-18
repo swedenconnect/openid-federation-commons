@@ -63,6 +63,6 @@ public interface QuarkusInternalRestClient {
   @GET
   List<String> discovery(
       @QueryParam("trust_anchor") final String trustAnchor,
-      @QueryParam("type") final List<String> types,
+      @QueryParam("entity_type") final List<String> types,
       @QueryParam("trust_mark_id") final List<String> trustMarkIds);
 }
