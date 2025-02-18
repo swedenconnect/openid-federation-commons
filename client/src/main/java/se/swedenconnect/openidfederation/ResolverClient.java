@@ -27,6 +27,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityID;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.Key;
 import java.text.ParseException;
@@ -37,6 +40,7 @@ import java.util.List;
  *
  * @author Felix Hellman
  */
+@Slf4j
 public class ResolverClient {
 
   private final ResolverRestClient restClient;
@@ -90,10 +94,17 @@ public class ResolverClient {
    * @return list of entities
    */
   public DiscoveryResponse discovery(final DiscoveryRequest request) {
+    log.debug("Performing discovery request {}", request);
     final List<String> entities = this.restClient.discovery(request);
+    log.debug("Discovered entities {}", entities);
     final List<ResolverResponse> resolvedEntities = entities.stream()
-        .map(sub -> this.resolve(new ResolverRequest(new EntityID(request.trustAnchor()),
-            new EntityID(sub), null)))
+        .map(sub -> {
+          final ResolverRequest resolveRequest = new ResolverRequest(new EntityID(request.trustAnchor()), new EntityID(sub), null);
+          log.debug("Performing resolve request {}", resolveRequest);
+          final ResolverResponse response = this.resolve(resolveRequest);
+          log.debug("Resolve response was {}", response);
+          return response;
+        })
         .toList();
     return new DiscoveryResponse(resolvedEntities);
   }
