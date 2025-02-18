@@ -99,7 +99,11 @@ public class ResolverClient {
     log.debug("Discovered entities {}", entities);
     final List<ResolverResponse> resolvedEntities = entities.stream()
         .map(sub -> {
-          final ResolverRequest resolveRequest = new ResolverRequest(new EntityID(request.trustAnchor()), new EntityID(sub), null);
+          final ResolverRequest resolveRequest =
+              new ResolverRequest(
+                  new EntityID(request.trustAnchor()),
+                  new EntityID(sub),
+                  null);
           log.debug("Performing resolve request {}", resolveRequest);
           final ResolverResponse response = this.resolve(resolveRequest);
           log.debug("Resolve response was {}", response);
