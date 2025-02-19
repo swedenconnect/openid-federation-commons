@@ -46,3 +46,5 @@ jobs:
         # Publish image
       - run: DOCKER_REPO=ghcr.io mvn clean package jib:build -Ddocker.repository=ghcr.io --no-transfer-progress
         working-directory: ${{inputs.service-path}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
