@@ -26,8 +26,11 @@ import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityID;
+import io.quarkus.rest.client.reactive.QuarkusRestClientBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
+import se.swedenconnect.openidfederation.quarkus.QuarkusInternalRestClient;
+import se.swedenconnect.openidfederation.quarkus.QuarkusResolverRestClient;
 
 import java.util.Date;
 import java.util.UUID;
@@ -42,7 +45,7 @@ public class ResolverClientTest {
   }
 
   @Test
-  void testResolver() throws JOSEException {
+  void testSpringResolver() throws JOSEException {
     final RSAKey signKey = generateKey();
     WireMock.stubFor(WireMock.get(urlPathEqualTo("/resolve"))
         .withQueryParam("sub", WireMock.matching(".*"))
@@ -51,6 +54,13 @@ public class ResolverClientTest {
     final ResolverClient resolver = new ResolverRestClientFactory().create(RestClient.builder().build(), new EntityID("http://localhost:11000"),
         new JWKSet(signKey.toPublicJWK()));
 
+    final Body body = new Body("[\"%s\"]".formatted("http://subject.test"));
+    final ResponseDefinitionBuilder responseDefinitionBuilder = new ResponseDefinitionBuilder()
+        .withHeader("Content-Type", "application/json")
+        .withResponseBody(body);
+    WireMock.stubFor(WireMock.get(urlPathEqualTo("/discovery"))
+        .willReturn(responseDefinitionBuilder));
+    resolver.discovery(new DiscoveryRequest("http://trustanchor.test", null, null));
     final ResolverResponse response = resolver.resolve(new ResolverRequest(new EntityID("http://trustanchor.test"),
         new EntityID("http://subject.test"), null));
     System.out.println(response);

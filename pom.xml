@@ -337,7 +337,12 @@
                         <id>check-coveredratio</id>
                         <phase>verify</phase>
                         <configuration>
-                            <haltOnFailure>false</haltOnFailure>
+                            <haltOnFailure>true</haltOnFailure>
+                            <excludes>
+                                <exclude>se/swedenconnect/openidfederation/quarkus/**</exclude>
+                                <exclude>se/swedenconnect/oidf/entity/**</exclude>
+                                <exclude>se/swedenconnect/oidf/registry/api/**</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
