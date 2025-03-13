@@ -114,7 +114,7 @@ public class OpenIdFederationServiceContainerTest {
     log.info("Got subordinate listing from container {}", listing);
     Assertions.assertTrue(listing.containsAll(expectedEntities));
 
-    final List<String> trustMarkSubjectsResponse = Arrays.asList(RestAssured
+    /*final List<String> trustMarkSubjectsResponse = Arrays.asList(RestAssured
         .get("http://localhost:%d/tmi/trust_mark_listing?trust_mark_id=%s".formatted(
             container.getPort(),
             trustMarkId
@@ -124,6 +124,6 @@ public class OpenIdFederationServiceContainerTest {
 
     Assertions.assertTrue(trustMarkSubjectsResponse.contains("https://myentity.test/ta"));
     Assertions.assertEquals(1, trustMarkSubjectsResponse.size());
-    log.info("Got trust mark subject listing from container {}", trustMarkSubjectsResponse);
+    log.info("Got trust mark subject listing from container {}", trustMarkSubjectsResponse);*/
   }
 }

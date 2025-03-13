@@ -62,7 +62,7 @@ public class OpenIdFederationServiceContainer extends GenericContainer<OpenIdFed
    * Default constructor.
    */
   public OpenIdFederationServiceContainer() {
-    super(DockerImageName.parse("ghcr.io/swedenconnect/openid-federation-services:v0.3.3"));
+    super(DockerImageName.parse("ghcr.io/swedenconnect/openid-federation-services:v0.4.4"));
     this.withCopyFileToContainer(
         MountableFile.forClasspathResource("services/application.yml"), "/container/application.yml");
     this.withEnv("SPRING_CONFIG_IMPORT", "/container/application.yml");
