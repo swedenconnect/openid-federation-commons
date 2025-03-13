@@ -24,7 +24,6 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityStatement;
-import com.nimbusds.openid.connect.sdk.federation.entities.EntityStatementClaimsSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,12 +33,18 @@ import java.util.UUID;
 
 class EntityConfigurationFactoryTest {
   @Test
-  void factoryCanCreateEntityConfiguration() throws JOSEException, ParseException {
+  void factoryCanCreateEntityConfiguration() throws JOSEException, ParseException, java.text.ParseException {
     final EntityConfigurationProperties properties = new EntityConfigurationProperties();
     properties.setEntityId("https://entityid.test");
-    properties.setJwks(new JWKSet(generateKey()));
-    properties.setMetadata(Map.of("federation_entity", Map.of("organization_name", "test")));
+    final RSAKey key = generateKey();
+    properties.setJwks(new JWKSet(key));
+    properties.setMetadata(Map.of("federation_entity", Map.of("organization_name", "test"), "openid_relying_party",
+        Map.of("something", "something")));
     final SignedJWT entityConfiguration = new EntityConfigurationFactory(properties).getEntityConfiguration();
+    final Map<String , Object> subsetMetadata =
+        (Map<String, Object>) entityConfiguration.getJWTClaimsSet().getJSONObjectClaim(
+        "metadata").get("openid_relying_party");
+    Assertions.assertTrue(subsetMetadata.containsKey("jwks"));
     Assertions.assertDoesNotThrow(() -> EntityStatement.parse(entityConfiguration).verifySignatureOfSelfStatement());
   }
 

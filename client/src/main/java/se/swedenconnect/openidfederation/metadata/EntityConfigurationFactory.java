@@ -29,10 +29,15 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityStatementClaimsSet;
+import com.nimbusds.openid.connect.sdk.federation.entities.EntityType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Factory class for creating EntityConfigurations.
@@ -69,9 +74,20 @@ public class EntityConfigurationFactory {
     );
 
 
-    entityStatementClaimsSet.setClaim("metadata", this.properties.getMetadata());
-
+    final Map<String, Object> metadata = new HashMap<>(this.properties.getMetadata());
     final JWSSigner signer = this.getSigner();
+    List.of(EntityType.OPENID_RELYING_PARTY, EntityType.OPENID_PROVIDER)
+            .forEach(type -> {
+              final Object o = metadata.get(type.getValue());
+              if (Objects.nonNull(o) && o instanceof Map s) {
+                final Map<String, Object> subset = s;
+                final HashMap<String, Object> tmp = new HashMap<>(subset);
+                tmp.put("jwks", this.properties.getJwks().toPublicJWKSet().toJSONObject());
+                metadata.put(type.getValue(), tmp);
+              }
+            });
+    entityStatementClaimsSet.setClaim("metadata", metadata);
+
     final JWSAlgorithm jwsAlgorithm = signer.supportedJWSAlgorithms().stream().findFirst().get();
     final SignedJWT signedJWT = new SignedJWT(new JWSHeader.
         Builder(jwsAlgorithm)
