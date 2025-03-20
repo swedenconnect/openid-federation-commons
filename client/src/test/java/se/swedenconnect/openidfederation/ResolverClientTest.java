@@ -27,12 +27,14 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.openid.connect.sdk.federation.entities.EntityID;
 import io.quarkus.rest.client.reactive.QuarkusRestClientBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
 import se.swedenconnect.openidfederation.quarkus.QuarkusInternalRestClient;
 import se.swedenconnect.openidfederation.quarkus.QuarkusResolverRestClient;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -63,7 +65,8 @@ public class ResolverClientTest {
     resolver.discovery(new DiscoveryRequest("http://trustanchor.test", null, null));
     final ResolverResponse response = resolver.resolve(new ResolverRequest(new EntityID("http://trustanchor.test"),
         new EntityID("http://subject.test"), null));
-    System.out.println(response);
+    Assertions.assertTrue(Objects.nonNull(response.getOpenIdProvider().get().getLogoUri()));
+    Assertions.assertTrue(Objects.nonNull(response.getOpenIdProvider().get().getAuthEndpoint()));
   }
 
   private static RSAKey generateKey() throws JOSEException {

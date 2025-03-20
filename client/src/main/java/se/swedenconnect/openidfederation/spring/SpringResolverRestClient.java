@@ -24,6 +24,8 @@ import se.swedenconnect.openidfederation.DiscoveryRequest;
 import se.swedenconnect.openidfederation.ResolverRequest;
 import se.swedenconnect.openidfederation.ResolverRestClient;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,16 +63,16 @@ public class SpringResolverRestClient implements ResolverRestClient {
 
   @Override
   public List<String> discovery(final DiscoveryRequest request) {
-    return this.client.get()
+    return Arrays.stream(this.client.get()
         .uri(builder -> {
           return builder.path("/discovery")
               .queryParam("trust_anchor", request.trustAnchor())
-              .queryParam("entity_type", request.types())
-              .queryParam("trust_mark_id", request.trustMarkIds())
+              .queryParamIfPresent("entity_type", Optional.ofNullable(request.types()))
+              .queryParamIfPresent("trust_mark_id", Optional.ofNullable(request.trustMarkIds()))
               .build();
         })
         .retrieve()
-        .toEntity(List.class)
-        .getBody();
+        .toEntity(String[].class)
+        .getBody()).toList();
   }
 }

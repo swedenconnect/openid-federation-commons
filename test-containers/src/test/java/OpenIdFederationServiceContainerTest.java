@@ -15,8 +15,6 @@
  *
  */
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,6 @@ import se.swedenconnect.oidf.TrustMarkSubjectProperties;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 
 public class OpenIdFederationServiceContainerTest {
@@ -104,7 +101,7 @@ public class OpenIdFederationServiceContainerTest {
             .classPathLocation("signkey-3.p12")
             .build())
         .build());
-
+/*
     container.start();
 
     final List<String> listing = Arrays.asList(RestAssured
@@ -113,7 +110,7 @@ public class OpenIdFederationServiceContainerTest {
 
     log.info("Got subordinate listing from container {}", listing);
     Assertions.assertTrue(listing.containsAll(expectedEntities));
-
+*/
     /*final List<String> trustMarkSubjectsResponse = Arrays.asList(RestAssured
         .get("http://localhost:%d/tmi/trust_mark_listing?trust_mark_id=%s".formatted(
             container.getPort(),

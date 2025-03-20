@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ResolverResponseFactory {
   public String generateResolverResponse(final JWK signKey) throws JOSEException {
@@ -36,6 +37,9 @@ public class ResolverResponseFactory {
         .subject("http://subject.test")
         .issueTime(Date.from(Instant.now()))
         .expirationTime(Date.from(Instant.now().plus(7, ChronoUnit.DAYS)))
+        .claim("metadata", Map.of("openid_provider",
+            Map.of("logo_uri", "https://logo.test", "authorization_endpoint", "https://auth.test")
+        ))
         .claim("trust_marks", List.of())
         .claim("trust_chain", List.of());
 
