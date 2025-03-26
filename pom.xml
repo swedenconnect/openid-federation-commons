@@ -98,6 +98,7 @@
         <module>api</module>
         <module>client</module>
         <module>test-containers</module>
+        <module>hash</module>
     </modules>
 
     <dependencyManagement>
