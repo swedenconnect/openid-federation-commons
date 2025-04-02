@@ -45,8 +45,12 @@ jobs:
       - name: Install dependencies
         run: |
           new_version=`echo $tag | awk -F'v' '{print $2}'`
-          echo "New version is $new_version"
-          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          if [-z "${new_version}" ]; then
+            echo "No version set from tag ..."
+          else
+            echo "New version is $new_version"
+            mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          fi
           mvn clean install --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}

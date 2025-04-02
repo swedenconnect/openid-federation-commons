@@ -25,7 +25,7 @@ jobs:
           cache: 'maven'
       - run: |
           new_version=`echo $tag | awk -F'v' '{print $2}'`
-          if [[-z "$new_version"]]; then
+          if [-z "${new_version}" ]; then
             echo "No version set from tag ..."
           else
             echo "New version is $new_version"
