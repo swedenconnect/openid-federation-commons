@@ -34,10 +34,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
       - if: ${{ inputs.auto-update-revision == true }}
         name: Commits changes and pushes
         run: |
@@ -53,4 +49,3 @@ jobs:
           git push
         env:
           tag: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
