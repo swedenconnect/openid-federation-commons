@@ -1,6 +1,11 @@
 # Sets the revision property to the current tagged version
 on:
   workflow_call:
+    inputs:
+      revision-property:
+        type: string
+        required: false
+        default: revision
 
 jobs:
   mvn-release:
@@ -12,7 +17,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=revision -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
+      - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
         env:
           tag: ${{ github.ref_name }}
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
