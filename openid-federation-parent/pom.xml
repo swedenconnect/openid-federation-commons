@@ -92,7 +92,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.4.3</spring.boot.version>
-        <credentials.support.version>2.0.2</credentials.support.version>
+        <credentials.support.version>2.0.5</credentials.support.version>
     </properties>
 
     <dependencyManagement>
