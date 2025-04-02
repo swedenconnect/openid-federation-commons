@@ -41,21 +41,17 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - name: Set version
-        run: |
-          new_version=`echo $tag | awk -F'v' '{print $2}'`
-          echo "New version is $new_version"
-          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
-        env:
-          tag: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
       # Download and install dependencies with PAT
       - name: Install dependencies
         run: mvn clean install --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
         # Publish image
-      - run: DOCKER_REPO=ghcr.io mvn clean package jib:build -Ddocker.repository=ghcr.io --no-transfer-progress
+      - run: |
+          new_version=`echo $tag | awk -F'v' '{print $2}'`
+          echo "New version is $new_version"
+          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          DOCKER_REPO=ghcr.io mvn clean package jib:build -Ddocker.repository=ghcr.io --no-transfer-progress
         working-directory: ${{inputs.service-path}}
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
