@@ -6,11 +6,6 @@ on:
     tags-ignore:
       - 'v*'
 jobs:
-  prepare:
-    uses: swedenconnect/openid-federation-commons/.github/workflows/mvn-artifact-version-prepare.yml@main
-    secrets: inherit
-    with:
-      revision-property: service-revision
   release:
     uses: swedenconnect/openid-federation-commons/.github/workflows/mvn-release.yml@main
     secrets: inherit
@@ -19,6 +14,7 @@ jobs:
       release-to-github: true
       release-to-maven-central: false
   finalize:
+    needs: release
     uses: swedenconnect/openid-federation-commons/.github/workflows/finalize.yml@main
     secrets: inherit
     with:

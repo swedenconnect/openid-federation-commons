@@ -25,8 +25,12 @@ jobs:
           cache: 'maven'
       - run: |
           new_version=`echo $tag | awk -F'v' '{print $2}'`
-          echo "New version is $new_version"
-          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          if [[-z "$new_version"]]; then
+            echo "No version set from tag ..."
+          else
+            echo "New version is $new_version"
+            mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          fi
           mvn --batch-mode deploy --no-transfer-progress
         if: ${{ inputs.release-to-github == true }}
         env:
