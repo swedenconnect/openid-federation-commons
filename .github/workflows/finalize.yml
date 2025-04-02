@@ -5,6 +5,10 @@ on:
         type: boolean
         required: false
         default: false
+      revision-property:
+        type: string
+        required: false
+        default: revision
 
 jobs:
   gh-release:
@@ -34,7 +38,8 @@ jobs:
         name: Commits changes and pushes
         run: |
           next_snapshot_version=`echo $tag | awk -F'[v.]' '{printf "%s.%s.%s-SNAPSHOT",$2,$3,$4+1}'`
-          mvn versions:set-property -Dproperty=revision -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
+          mvn versions:set-property -Dproperty=${{inputs.revision-property}} -DnewVersion=$next_snapshot_version 
+          -DgenerateBackupPoms=false
           # Github Actions user
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
