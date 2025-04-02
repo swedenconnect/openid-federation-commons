@@ -6,6 +6,9 @@ on:
         type: string
       frontend-path:
         type: string
+      revision-property:
+        type: string
+        default: revision
 jobs:
   docker-ghcr-publish:
     runs-on: ubuntu-latest
@@ -17,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{github.actor}}
@@ -38,7 +41,15 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-        # Download and install dependencies with PAT
+      - name: Set version
+        run: |
+          new_version=`echo $tag | awk -F'v' '{print $2}'`
+          echo "New version is $new_version"
+          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+        env:
+          tag: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
+      # Download and install dependencies with PAT
       - name: Install dependencies
         run: mvn clean install --no-transfer-progress
         env:
