@@ -41,17 +41,14 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+      - run: |
+          new_version=`echo $tag | awk -F'v' '{print $2}'`
+                    echo "New version is $new_version"
+                    mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+        if: ${{ github.ref_name != '' }}
       # Download and install dependencies with PAT
       - name: Install dependencies
-        run: |
-          new_version=`echo $tag | awk -F'v' '{print $2}'`
-          if [-z "${new_version}" ]; then
-            echo "No version set from tag ..."
-          else
-            echo "New version is $new_version"
-            mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
-          fi
-          mvn clean install --no-transfer-progress
+        run: mvn clean install --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
           tag: ${{ github.ref_name }}
