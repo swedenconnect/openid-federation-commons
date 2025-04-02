@@ -9,6 +9,9 @@ on:
         type: boolean
         required: false
         default: false
+      revision-property:
+        type: string
+        default: revision
 
 jobs:
   mvn-release:
