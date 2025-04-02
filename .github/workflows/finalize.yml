@@ -49,3 +49,4 @@ jobs:
           git push
         env:
           tag: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
