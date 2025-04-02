@@ -55,3 +55,4 @@ jobs:
         working-directory: ${{inputs.service-path}}
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
+          tag: ${{ github.ref_name }}
