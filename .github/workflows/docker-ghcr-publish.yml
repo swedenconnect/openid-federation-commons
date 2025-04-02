@@ -7,7 +7,7 @@ on:
       frontend-path:
         type: string
 jobs:
-  build:
+  docker-ghcr-publish:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -38,9 +38,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-        # Download dependencies with PAT
-      - name: Download dependencies
-        run: mvn dependency:resolve --no-transfer-progress
+        # Download and install dependencies with PAT
+      - name: Install dependencies
+        run: mvn clean install --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
         # Publish image

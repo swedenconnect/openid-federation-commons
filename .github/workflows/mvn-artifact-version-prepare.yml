@@ -15,3 +15,4 @@ jobs:
       - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=revision -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
         env:
           tag: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
