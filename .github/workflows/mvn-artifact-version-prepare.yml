@@ -17,7 +17,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
+      - run: |
+          new_version=`echo $tag | awk -F'v' '{print $2}'`
+          echo "New version is $new_version"
+          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
         env:
           tag: ${{ github.ref_name }}
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}

@@ -9,10 +9,6 @@ on:
         type: boolean
         required: false
         default: false
-      auto-update-revision:
-        type: boolean
-        required: false
-        default: false
 
 jobs:
   mvn-release:
@@ -34,42 +30,3 @@ jobs:
           tag: ${{ github.ref_name }}
       - run: echo "Release to maven central is not implemented"
         if: ${{ inputs.release-to-maven-central == true }}
-  gh-release:
-    needs:
-      - mvn-release
-    name: Release pushed tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-        run: |
-          gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-              --generate-notes
-  version-update:
-    needs:
-      - gh-release
-    name: Update reversion version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-      - if: ${{ inputs.auto-update-revision == true }}
-        name: Commits changes and pushes
-        run: |
-          next_snapshot_version=`echo $tag | awk -F'[v.]' '{printf "%s.%s.%s-SNAPSHOT",$2,$3,$4+1}'`
-          mvn versions:set-property -Dproperty=revision -DnewVersion=$next_snapshot_version -DgenerateBackupPoms=false
-          # Github Actions user
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git status
-          git commit -m "Update to next snapshot version"
-          git push
-        env:
-          tag: ${{ github.ref_name }}
