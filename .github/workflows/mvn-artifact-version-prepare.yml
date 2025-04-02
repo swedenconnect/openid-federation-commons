@@ -1,0 +1,17 @@
+# Sets the revision property to the current tagged version
+on:
+  workflow_call:
+
+jobs:
+  mvn-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+      - run: mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=revision -DnewVersion=`echo $tag | awk -F'v' '{print $2}'` --no-transfer-progress
+        env:
+          tag: ${{ github.ref_name }}
