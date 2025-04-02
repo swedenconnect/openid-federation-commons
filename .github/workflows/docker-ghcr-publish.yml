@@ -43,17 +43,17 @@ jobs:
           cache: 'maven'
       # Download and install dependencies with PAT
       - name: Install dependencies
-        run: mvn clean install --no-transfer-progress
-        env:
-          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
-        # Publish image
-      - run: |
+        run: |
           new_version=`echo $tag | awk -F'v' '{print $2}'`
           echo "New version is $new_version"
           mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
-          mvn clean install -DskipTests=true --no-transfer-progress
+          mvn clean install --no-transfer-progress
+        env:
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
+          tag: ${{ github.ref_name }}
+        # Publish image
+      - run: |
           DOCKER_REPO=ghcr.io mvn clean package jib:build -Ddocker.repository=ghcr.io --no-transfer-progress
         working-directory: ${{inputs.service-path}}
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
-          tag: ${{ github.ref_name }}
