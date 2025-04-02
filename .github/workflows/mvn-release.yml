@@ -1,11 +1,33 @@
-name: Automated release of maven artifacts
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      release-to-github:
+        type: boolean
+        required: false
+        default: false
+      release-to-maven-central:
+        type: boolean
+        required: false
+        default: false
+
 jobs:
-  release:
-    uses: swedenconnect/openid-federation-commons/.github/workflows/reusable-mvn-release.yml@main
-    secrets: inherit
-    with:
-      auto-update-revision: true
+  mvn-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+      - run: |
+          new_version=`echo $tag | awk -F'v' '{print $2}'`
+          echo "New version is $new_version"
+          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          mvn --batch-mode deploy --no-transfer-progress
+        if: ${{ inputs.release-to-github == true }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+      - run: echo "Release to maven central is not implemented"
+        if: ${{ inputs.release-to-maven-central == true }}
