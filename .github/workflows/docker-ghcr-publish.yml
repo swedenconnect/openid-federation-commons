@@ -51,6 +51,7 @@ jobs:
           new_version=`echo $tag | awk -F'v' '{print $2}'`
           echo "New version is $new_version"
           mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          mvn clean install -DskipTests=true --no-transfer-progress
           DOCKER_REPO=ghcr.io mvn clean package jib:build -Ddocker.repository=ghcr.io --no-transfer-progress
         working-directory: ${{inputs.service-path}}
         env:
