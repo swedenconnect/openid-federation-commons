@@ -30,6 +30,10 @@ jobs:
           new_version=`echo $tag | awk -F'v' '{print $2}'`
           echo "New version is $new_version"
           mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+      - name: Install dependencies
+        run: mvn clean install --no-transfer-progress
+        env:
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
       - run: mvn --batch-mode deploy --no-transfer-progress
         if: ${{ inputs.release-to-github == true }}
         env:
