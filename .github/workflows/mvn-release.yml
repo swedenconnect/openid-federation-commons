@@ -12,6 +12,10 @@ on:
       revision-property:
         type: string
         default: revision
+      requires-private-dependencies:
+        type: boolean
+        default: false
+        description: Required if any dependency is only uploaded to github mvn repository
 
 jobs:
   mvn-release:
@@ -30,7 +34,8 @@ jobs:
           new_version=`echo $tag | awk -F'v' '{print $2}'`
           echo "New version is $new_version"
           mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
-      - name: Install dependencies
+      - if: ${{ inputs.requires-private-dependencies == true }}
+        name: Install dependencies
         run: mvn clean install --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
