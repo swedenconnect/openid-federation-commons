@@ -41,7 +41,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - if: ${{ github.ref != '' }}
+      - if: ${{ github.ref != 'refs/heads/main' }}
         run: |
           echo "TAG:$tag"
           new_version=`echo $tag | awk -F'v' '{print $2}'`
