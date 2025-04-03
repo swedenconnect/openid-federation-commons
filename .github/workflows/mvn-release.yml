@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - if: ${{ github.ref != 'main' }}
+      - if: ${{ github.ref != '' }}
         run: |
           echo "TAG:$tag"
           new_version=`echo $tag | awk -F'v' '{print $2}'`
