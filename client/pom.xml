@@ -134,7 +134,7 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client-jackson</artifactId>
-            <version>3.13.0</version>
+            <version>3.25.3</version>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
