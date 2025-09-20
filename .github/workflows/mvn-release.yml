@@ -54,5 +54,5 @@ jobs:
         if: ${{ inputs.release-to-maven-central == true }}
         with:
           registry: ossrh
-          username: ${{secrets.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          username: ${{secrets.SE_BOT_USERNAME}}
+          password: ${{secrets.SE_BOT_PASSWORD}}
