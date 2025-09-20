@@ -50,7 +50,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
-      - run: mvn clean deploy -Prelease -DprofileIdEnabled=true
+      - run: mvn --batch-mode clean deploy -Prelease -DprofileIdEnabled=true
         if: ${{ inputs.release-to-maven-central == true }}
         with:
           registry: ossrh
