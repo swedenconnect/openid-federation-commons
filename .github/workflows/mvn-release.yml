@@ -50,5 +50,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
-      - run: echo "Release to maven central is not implemented"
+      - run: mvn clean deploy -Pdev1 -DprofileIdEnabled=true
         if: ${{ inputs.release-to-maven-central == true }}
+        with:
+          registry: ossrh
+          username: ${{secrets.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
