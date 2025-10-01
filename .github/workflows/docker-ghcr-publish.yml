@@ -42,7 +42,8 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Set Maven versoion from tag name
+
+      - name: Set Maven version from tag name
         if: startsWith(github.ref, 'refs/tags/')
         env:
           REVISION_PROPERTY: ${{ inputs.revision-property }}
@@ -54,7 +55,8 @@ jobs:
           mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=$REVISION_PROPERTY \
           -DnewVersion=$NEW_VERSION --no-transfer-progress
           
-      # Download and install dependencies with PAT
+    # Download and install dependencies with PAT
+
       - name: Install dependencies
         run: mvn clean install --no-transfer-progress
         env:
