@@ -45,10 +45,14 @@ jobs:
         run: mvn clean install -DskipTests=true --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
-      - run: mvn --batch-mode deploy --no-transfer-progress
+      - run: mvn --batch-mode deploy --no-transfer-progress -Pgithub -DprofileIdEnabled=true
         if: ${{ inputs.release-to-github == true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
-      - run: echo "Release to maven central is not implemented"
+      - run: mvn --batch-mode clean deploy -Prelease -DprofileIdEnabled=true
         if: ${{ inputs.release-to-maven-central == true }}
+        with:
+          registry: ossrh
+          username: ${{secrets.SE_BOT_USERNAME}}
+          password: ${{secrets.SE_BOT_PASSWORD}}
