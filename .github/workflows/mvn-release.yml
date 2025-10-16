@@ -39,6 +39,7 @@ jobs:
         env:
           REVISION_PROPERTY: ${{ inputs.revision-property }}
           TAG: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
         run: |
           echo "TAG:$TAG"
           NEW_VERSION=${TAG#v}
