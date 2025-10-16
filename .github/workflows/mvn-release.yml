@@ -34,18 +34,26 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - if: ${{ github.ref != 'refs/heads/main' }}
+      - name: Set Maven version from tag name
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          REVISION_PROPERTY: ${{ inputs.revision-property }}
+          TAG: ${{ github.ref_name }}
         run: |
-          echo "TAG:$tag"
-          new_version=`echo $tag | awk -F'v' '{print $2}'`
-          echo "New version is $new_version"
-          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=${{inputs.revision-property}} -DnewVersion=$new_version --no-transfer-progress
+          echo "TAG:$TAG"
+          NEW_VERSION=${TAG#v}
+          echo "New version is $NEW_VERSION"
+          mvn versions:set-property -DgenerateBackupPoms=false -Dproperty=$REVISION_PROPERTY \
+          -DnewVersion=$NEW_VERSION --no-transfer-progress
+
       - if: ${{ inputs.requires-private-dependencies == true }}
         name: Install dependencies
         run: mvn clean install -DskipTests=true --no-transfer-progress
         env:
           GITHUB_TOKEN: ${{ secrets.SC_ACTION_SECRET }}
+
       - run: mvn --batch-mode deploy --no-transfer-progress
+        name: Deploy maven artifacts
         if: ${{ inputs.release-to-github == true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
