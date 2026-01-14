@@ -91,7 +91,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.5.6</spring.boot.version>
+        <spring.boot.version>3.5.9</spring.boot.version>
         <credentials.support.version>2.0.7</credentials.support.version>
     </properties>
 
@@ -276,7 +276,7 @@
                     <checkstyleRules>
                         <module name="Checker">
                             <module name="RegexpHeader">
-                                <property name="header" value="/*\n * Copyright (2024-)?2025 Sweden Connect"/>
+                                <property name="header" value="/*\n * Copyright (202[4-6](-2026)?) Sweden Connect"/>
                             </module>
                             <module name="LineLength">
                                 <property name="max" value="120"/>
