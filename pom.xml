@@ -84,7 +84,7 @@
     </organization>
 
     <properties>
-        <revision>0.5.12-SNAPSHOT</revision>
+        <revision>0.5.15-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>
@@ -180,7 +180,7 @@
                     <checkstyleRules>
                         <module name="Checker">
                             <module name="RegexpHeader">
-                                <property name="header" value="/*\n * Copyright (2024-)?202[4-9] Sweden Connect"/>
+                                <property name="header" value="/*\n * Copyright (202[4-9]-)?202[4-9] Sweden Connect"/>
                             </module>
                             <module name="LineLength">
                                 <property name="max" value="120"/>
