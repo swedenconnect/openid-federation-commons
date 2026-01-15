@@ -180,7 +180,7 @@
                     <checkstyleRules>
                         <module name="Checker">
                             <module name="RegexpHeader">
-                                <property name="header" value="/*\n * Copyright (2024-)?2026 Sweden Connect"/>
+                                <property name="header" value="/*\n * Copyright (2024-)?202[4-9] Sweden Connect"/>
                             </module>
                             <module name="LineLength">
                                 <property name="max" value="120"/>
