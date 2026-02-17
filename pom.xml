@@ -84,7 +84,7 @@
     </organization>
 
     <properties>
-        <revision>0.5.15-SNAPSHOT</revision>
+        <revision>0.5.16-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>
@@ -95,7 +95,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>openid-federation-parent</module>
-        <module>api</module>
         <module>client</module>
         <module>test-containers</module>
         <module>hash</module>
@@ -153,6 +152,20 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.34</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <!-- Style-check -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
