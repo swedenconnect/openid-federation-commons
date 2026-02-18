@@ -31,7 +31,11 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
+<<<<<<< 89-lifting-spring-version
           java-version: '25.0.2+10-LTS'
+=======
+          java-version: '25'
+>>>>>>> main
           cache: 'maven'
 
       - name: Set Maven version from tag name
